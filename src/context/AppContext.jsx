@@ -20,11 +20,15 @@ const AppContextProvider = (props)=>{
 
     const getDoctorsData = async ()=>{
         try {
-            const {data} = await axios.get(backendUrl + '/api/doctor/list')
+            console.log('Fetching doctors from:', backendUrl + '/api/user/list-doctors');
+            const {data} = await axios.get(backendUrl + '/api/user/list-doctors')
+            console.log('API Response:', data);
             if(data.success){
+                console.log('Doctors fetched:', data.doctors.length);
                 setDoctors(data.doctors)
 
             }else{
+                console.error('API Error:', data.message);
                 toast.error(data.message)
             }
             

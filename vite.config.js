@@ -10,5 +10,12 @@ export default defineConfig({
 
     react()
   ],
-  server:{port:5173}
+  server: {
+    port: 5173,
+    historyApiFallback: true
+  },
+  preview: {
+    port: 5173,
+    historyApiFallback: true
+  }
 })
