@@ -1,66 +1,73 @@
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
-import { toast} from "react-toastify";
+import { toast } from "react-toastify";
 
 
 
 export const AppContext = createContext()
-const AppContextProvider = (props)=>{
-    const currencySymbol='$'
+const AppContextProvider = (props) => {
+    const currencySymbol = '$'
 
-    const backendUrl = import.meta.env.VITE_BACKEND_URL
+    const getBackendUrl = () => {
+        const envUrl = import.meta.env.VITE_BACKEND_URL;
+        if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
+            return 'https://docbook-bb7z.onrender.com';
+        }
+        return envUrl || 'http://localhost:8000';
+    };
+    const backendUrl = getBackendUrl();
     const [doctors, setDoctors] = useState([])
 
     const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.getItem('token') : false)
 
     const [userData, setUserData] = useState(false)
 
-      
-   
 
-    const getDoctorsData = async ()=>{
+
+
+    const getDoctorsData = async () => {
         try {
             console.log('Fetching doctors from:', backendUrl + '/api/user/list-doctors');
-            const {data} = await axios.get(backendUrl + '/api/user/list-doctors')
+            const { data } = await axios.get(backendUrl + '/api/user/list-doctors')
             console.log('API Response:', data);
-            if(data.success){
+            if (data.success) {
                 console.log('Doctors fetched:', data.doctors.length);
                 setDoctors(data.doctors)
 
-            }else{
+            } else {
                 console.error('API Error:', data.message);
                 toast.error(data.message)
             }
-            
+
         } catch (error) {
-          toast.error("Something went wrong while fetching doctors data")
-          console.log(error)
-            
+            toast.error("Something went wrong while fetching doctors data")
+            console.log(error)
+
         }
     }
 
-    const loadUserProfileData = async ()=>{
+    const loadUserProfileData = async () => {
         try {
-            const {data} = await axios.get(backendUrl + '/api/user/get-profile',{
+            const { data } = await axios.get(backendUrl + '/api/user/get-profile', {
                 headers:
-                    {token}
-                
+                    { token }
+
             })
-            if(data.success){
+            if (data.success) {
                 setUserData(data.userData)
-            }else{
+            } else {
                 toast.error(data.message)
             }
-            
+
         } catch (error) {
-          toast.error("Something went wrong while fetching user data")
-          console.log(error)
-            
+            toast.error("Something went wrong while fetching user data")
+            console.log(error)
+
         }
     }
 
     const value = {
-        doctors,getDoctorsData,
+        doctors, getDoctorsData,
         currencySymbol,
         token,
         setToken,
@@ -70,19 +77,19 @@ const AppContextProvider = (props)=>{
         loadUserProfileData,
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getDoctorsData()
-    },[ ])
+    }, [])
 
-    useEffect(()=>{
-        if(token){
+    useEffect(() => {
+        if (token) {
             loadUserProfileData()
-        }else{
+        } else {
             setUserData(false)
         }
     }, [token])
 
-    return(
+    return (
         <AppContext.Provider value={value}>
             {props.children}
         </AppContext.Provider>

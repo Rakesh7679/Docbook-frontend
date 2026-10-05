@@ -75,6 +75,15 @@ const Navbar = () => {
                 </p>
                 <p
                   onClick={() => {
+                    navigate('prescriptions');
+                    setShowDropdown(false); // Close dropdown
+                  }}
+                  className="hover:text-black cursor-pointer text-indigo-600 font-semibold"
+                >
+                  My Prescriptions 📄
+                </p>
+                <p
+                  onClick={() => {
                     logout();
                     setShowDropdown(false); // Close dropdown
                   }}
@@ -119,14 +128,25 @@ const Navbar = () => {
               <p className="px-4 py-2 rounded inline-block">HOME</p>
             </NavLink>
             <NavLink onClick={() => setShowMenu(false)} to="/doctors">
-              <p className="px-4 py-2 rounded inline-block">All DOCTOR</p>
+              <p className="px-4 py-2 rounded inline-block">ALL DOCTORS</p>
             </NavLink>
             <NavLink onClick={() => setShowMenu(false)} to="/about">
               <p className="px-4 py-2 rounded inline-block">ABOUT</p>
             </NavLink>
             <NavLink onClick={() => setShowMenu(false)} to="/contact">
-              <p className="px-4 py-2 rounded inline-block">Contact</p>
+              <p className="px-4 py-2 rounded inline-block">CONTACT</p>
             </NavLink>
+            {!token && (
+              <button
+                onClick={() => {
+                  setShowMenu(false);
+                  navigate("/login");
+                }}
+                className="bg-[#5f6FFF] text-white px-8 py-3 rounded-full font-medium mt-4 shadow-md text-base"
+              >
+                Login / Create account
+              </button>
+            )}
           </ul>
         </div>
       </div>
